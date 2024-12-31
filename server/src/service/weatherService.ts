@@ -42,23 +42,62 @@ class WeatherService {
     this.cityName = '';
   }
   // TODO: Create fetchLocationData method
-  // private async fetchLocationData(query: string) {}
+  private async fetchLocationData(query: string) {
+    try {
+      if (!this.baseURL || !this.apiKey) {
+        throw new Error('Key or URL not found');
+      }
+      const response: Coordinates = await fetch(query).then((res) =>
+        res.json()
+      );
+      return response;
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  }
+  //
   // TODO: Create destructureLocationData method
-  // private destructureLocationData(locationData: Coordinates): Coordinates {}
+  private destructureLocationData(locationData: Coordinates): Coordinates {
+    // returns lat and lon
+    if (!locationData) {
+      throw new Error('Please pass in a location');
+    }
+    const { lat, lon } = locationData;
+    const coordinates: Coordinates = {
+      lat,
+      lon,
+    };
+    return coordinates;
+  }
   // TODO: Create buildGeocodeQuery method
-  // private buildGeocodeQuery(): string {}
+  private buildGeocodeQuery(): string {
+    const geoQuery = `${this.baseURL}/geo/1.0/direct?q=${this.cityName}&appid${this.apiKey}`;
+    return geoQuery;
+  }
+
   // TODO: Create buildWeatherQuery method
-  // private buildWeatherQuery(coordinates: Coordinates): string {}
+  private buildWeatherQuery(coordinates: Coordinates): string {
+    const weatherQuery = `api.openweathermap.org/data/2.5/forecast?lat=${coordinates.lat}&lon=${coordinates.lon}&appid=${this.apiKey}`;
+    return weatherQuery;
+  }
+
   // TODO: Create fetchAndDestructureLocationData method
-  // private async fetchAndDestructureLocationData() {}
+  private async fetchAndDestructureLocationData() {
+    return;
+  }
+
   // TODO: Create fetchWeatherData method
-  // private async fetchWeatherData(coordinates: Coordinates) {}
+  private async fetchWeatherData(coordinates: Coordinates) {}
+
   // TODO: Build parseCurrentWeather method
-  // private parseCurrentWeather(response: any) {}
+  private parseCurrentWeather(response: any) {}
+
   // TODO: Complete buildForecastArray method
-  // private buildForecastArray(currentWeather: Weather, weatherData: any[]) {}
+  private buildForecastArray(currentWeather: Weather, weatherData: any[]) {}
+
   // TODO: Complete getWeatherForCity method
-  // async getWeatherForCity(city: string) {}
+  async getWeatherForCity(city: string) {}
 }
 
 export default new WeatherService();
