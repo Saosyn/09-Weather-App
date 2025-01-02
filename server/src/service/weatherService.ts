@@ -8,6 +8,7 @@ interface Coordinates {
 }
 // TODO: Define a class for the Weather object
 class Weather {
+  city: string;
   tempF: number;
   wind: number;
   humidity: number;
@@ -15,12 +16,14 @@ class Weather {
   icon: string;
 
   constructor(
+    city: string,
     tempF: number,
     wind: number,
     humidity: number,
     date: Date,
     icon: string
   ) {
+    this.city = city;
     this.tempF = tempF;
     this.wind = wind;
     this.humidity = humidity;
@@ -52,7 +55,7 @@ class WeatherService {
       );
       return response;
     } catch (error) {
-      console.log(error);
+      console.error(error);
       throw error;
     }
   }
@@ -84,17 +87,47 @@ class WeatherService {
 
   // TODO: Create fetchAndDestructureLocationData method
   private async fetchAndDestructureLocationData() {
-    return;
+    return await this.fetchLocationData(this.buildGeocodeQuery()).then((data) =>
+      this.destructureLocationData(data)
+    );
   }
 
   // TODO: Create fetchWeatherData method
-  private async fetchWeatherData(coordinates: Coordinates) {}
+  private async fetchWeatherData(coordinates: Coordinates) {
+    try {
+      const response = await fetch(this.buildWeatherQuery(coordinates)).then(
+        (res) => res.json()
+      );
+      // used for now
+      return response;
+      // FIXME: circle back
+      // const weatherData: Weather =
+
+      // We should get current weather
+      // We should get weather over next 5 days
+    } catch {}
+  }
 
   // TODO: Build parseCurrentWeather method
-  private parseCurrentWeather(response: any) {}
+  private parseCurrentWeather(response: any) {
+    const parsedTime = response.list.dt_txt;
+    console.log(parsedTime);
+    const currentWeather = new Weather(
+      this.city,
+      response.main.temp,
+      response.wind.speed,
+      humidity,
+      icon,
+      date
+    );
+  }
 
   // TODO: Complete buildForecastArray method
-  private buildForecastArray(currentWeather: Weather, weatherData: any[]) {}
+  private buildForecastArray(currentWeather: Weather, weatherData: any[]) {
+    const filteredWeatherData = weatherData.filter((data: any) => {
+      return data.dt_txt.includes('12:00:00');
+    });
+  }
 
   // TODO: Complete getWeatherForCity method
   async getWeatherForCity(city: string) {}
