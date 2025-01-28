@@ -1,3 +1,4 @@
+import { Dayjs } from 'dayjs';
 import dotenv from 'dotenv';
 dotenv.config();
 
@@ -12,16 +13,18 @@ class Weather {
   tempF: number;
   wind: number;
   humidity: number;
-  date: Date;
+  date: Dayjs | string;
   icon: string;
+  iconDescription: string;
 
   constructor(
     city: string,
     tempF: number,
     wind: number,
     humidity: number,
-    date: Date,
-    icon: string
+    date: Dayjs | string,
+    icon: string,
+    iconDescription: string
   ) {
     this.city = city;
     this.tempF = tempF;
@@ -29,20 +32,21 @@ class Weather {
     this.humidity = humidity;
     this.date = date;
     this.icon = icon;
+    this.iconDescription = iconDescription;
   }
 }
 
 // TODO: Complete the WeatherService class
 class WeatherService {
   // TODO: Define the baseURL, API key, and city name properties
-  private baseURL: string;
-  private apiKey: string;
-  private cityName: string;
+  private baseURL?: string;
+  private apiKey?: string;
+  private city = '';
 
   constructor() {
     this.baseURL = process.env.API_BASE_URL || '';
     this.apiKey = process.env.API_KEY || '';
-    this.cityName = '';
+    this.city = '';
   }
   // TODO: Create fetchLocationData method
   private async fetchLocationData(query: string) {
@@ -75,7 +79,7 @@ class WeatherService {
   }
   // TODO: Create buildGeocodeQuery method
   private buildGeocodeQuery(): string {
-    const geoQuery = `${this.baseURL}/geo/1.0/direct?q=${this.cityName}&appid${this.apiKey}`;
+    const geoQuery = `${this.baseURL}/geo/1.0/direct?q=${this.city}&appid${this.apiKey}`;
     return geoQuery;
   }
 
@@ -98,39 +102,82 @@ class WeatherService {
       const response = await fetch(this.buildWeatherQuery(coordinates)).then(
         (res) => res.json()
       );
-      // used for now
-      return response;
-      // FIXME: circle back
-      // const weatherData: Weather =
+      if (!response) {
+        throw new Error('Weather data not found');
+      }
 
-      // We should get current weather
-      // We should get weather over next 5 days
-    } catch {}
+      const currentWeather: Weather = this.parseCurrentWeather(
+        response.list[0]
+      );
+
+      const forecast: Weather[] = this.buildForecastArray(
+        currentWeather,
+        response.list
+      );
+
+      return forecast;
+    } catch (error: any) {
+      console.error(error);
+      return error;
+    }
   }
 
   // TODO: Build parseCurrentWeather method
   private parseCurrentWeather(response: any) {
-    const parsedTime = response.list.dt_txt;
-    console.log(parsedTime);
+    const parsedDate = Dayjs.unix(response.dt).format('M/D/YYYY');
+    console.log(parsedDate);
     const currentWeather = new Weather(
       this.city,
+      parsedDate,
       response.main.temp,
       response.wind.speed,
-      humidity,
-      icon,
-      date
+      response.main.humidity,
+      response.weather[0].icon,
+      response.weather[0].main || response.weather[0].main
     );
+
+    return currentWeather;
   }
 
   // TODO: Complete buildForecastArray method
   private buildForecastArray(currentWeather: Weather, weatherData: any[]) {
+    const weatherForecast: Weather[] = [currentWeather];
+
     const filteredWeatherData = weatherData.filter((data: any) => {
       return data.dt_txt.includes('12:00:00');
     });
+
+    for (const day of filteredWeatherData) {
+      weatherForecast.push(
+        new Weather(
+          this.city,
+          Dayjs.unix(day.dt).format('M/D/YYYY'),
+          day.main.temp,
+          day.wind.speed,
+          day.main.humidity,
+          day.weather[0].icon,
+          day.weather[0].description || day.weather[0].main
+        )
+      );
+    }
   }
 
   // TODO: Complete getWeatherForCity method
-  async getWeatherForCity(city: string) {}
+  async getWeatherForCity(city: string) {
+    try {
+      this.city = city;
+      const coordinates = await this.fetchAndDestructureLocationData();
+      if (coordinates) {
+        const weather = await this.fetchWeatherData(coordinates);
+        return weather;
+      }
+
+      throw new Error('Weather data not found');
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  }
 }
 
 export default new WeatherService();
