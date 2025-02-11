@@ -1,12 +1,15 @@
 {
   "extends": "../tsconfig.json",
   "compilerOptions": {
-    "module": "NodeNext",
-    "moduleResolution": "NodeNext",
-    "target": "ESNext",
     "outDir": "dist",
     "rootDir": "src",
-    "strict": true
+    "module": "CommonJS", // ✅ If you use import.meta.url, ESNext is required
+    "target": "ES6",
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "types": ["node"]
   },
   "include": ["src"]
 }
