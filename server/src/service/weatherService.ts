@@ -1,7 +1,5 @@
-// import { timeStamp } from 'console';
-// import dayjs from 'dayjs';
 import dotenv from 'dotenv';
-// import axios from 'axios';
+
 dotenv.config();
 
 // TODO: Define an interface for the Coordinates object
@@ -48,7 +46,6 @@ class WeatherService {
   constructor() {
     this.baseURL = process.env.API_BASE_URL || '';
     this.apiKey = process.env.API_KEY || '';
-    // this.city = '';
   }
   // TODO: Create fetchLocationData method
 
@@ -61,13 +58,13 @@ class WeatherService {
       const response = await fetch(query);
       const data = await response.json();
 
-      console.log('Geocode API Response:', data); // Debugging log
+      console.log('Geocode API Response:', data);
 
       if (!Array.isArray(data) || data.length === 0) {
         throw new Error('Geolocation data not found');
       }
 
-      return data[0]; // Extract first result
+      return data[0];
     } catch (error) {
       console.error('Error fetching location data:', error);
       throw error;
@@ -100,7 +97,7 @@ class WeatherService {
         (res) => res.json()
       );
 
-      console.log('Weather API Response:', response); // Add this log
+      console.log('Weather API Response:', response);
 
       if (!response || !response.list || response.list.length === 0) {
         throw new Error('Weather data not found or API returned empty list');
@@ -127,14 +124,14 @@ class WeatherService {
   private parseCurrentWeather(response: any): Weather {
     const timestamp: number = Number(response.dt) * 1000;
     const parsedDate: string = new Date(timestamp).toLocaleDateString('en-US');
-    const windSpeed = response.wind?.speed ?? 0; // Use wind.speed if it exists, else 0
+    const windSpeed = response.wind?.speed ?? 0;
     console.log('parseCurrentWeather - wind:', response.wind);
 
     const tempF = Math.round(response.main.temp);
 
     return new Weather(
       this.city,
-      tempF, // already in °F from API (units=imperial)
+      tempF,
       windSpeed,
       response.main.humidity,
       parsedDate,
@@ -178,57 +175,6 @@ class WeatherService {
 
     return weatherForecast;
   }
-
-  // private parseCurrentWeather(response: any): Weather {
-  //   const timestamp: number = Number(response.dt) * 1000;
-  //   const parsedDate: string = new Date(timestamp).toLocaleDateString('en-US');
-
-  //   console.log(parsedDate);
-
-  //   return new Weather(
-  //     this.city,
-  //     response.main.temp,
-  //     response.wind_speed,
-  //     response.main.humidity,
-  //     parsedDate,
-  //     response.weather[0].icon,
-  //     response.weather[0].main || response.weather[0].description
-  //   );
-  // }
-
-  // // TODO: Complete buildForecastArray method
-
-  // private buildForecastArray(
-  //   currentWeather: Weather,
-  //   weatherData: any[]
-  // ): Weather[] {
-  //   const weatherForecast: Weather[] = [currentWeather];
-
-  //   const filteredWeatherData = weatherData.filter((data: any) =>
-  //     data.dt_txt.includes('12:00:00')
-  //   );
-
-  //   for (const day of filteredWeatherData) {
-  //     const timestamp: number = Number(day.dt) * 1000; // Convert to milliseconds
-  //     const formattedDate: string = new Date(timestamp).toLocaleDateString(
-  //       'en-US'
-  //     );
-
-  //     weatherForecast.push(
-  //       new Weather(
-  //         this.city,
-  //         day.main.temp,
-  //         day.wind_speed,
-  //         day.main.humidity,
-  //         formattedDate,
-  //         day.weather[0].icon,
-  //         day.weather[0].description || day.weather[0].main
-  //       )
-  //     );
-  //   }
-
-  //   return weatherForecast;
-  // }
 
   // TODO: Complete getWeatherForCity method
   async getWeatherForCity(city: string) {

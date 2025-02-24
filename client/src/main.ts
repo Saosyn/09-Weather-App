@@ -80,7 +80,6 @@ const renderCurrentWeather = (currentWeather: any): void => {
   const { city, date, icon, iconDescription, tempF, wind, humidity } =
     currentWeather;
 
-  // convert the following to typescript
   heading.textContent = `${city} (${date})`;
   weatherIcon.setAttribute(
     'src',
@@ -123,7 +122,6 @@ const renderForecastCard = (forecast: any) => {
   const { col, cardTitle, weatherIcon, tempEl, windEl, humidityEl } =
     createForecastCard();
 
-  // Add content to elements
   cardTitle.textContent = date;
   weatherIcon.setAttribute(
     'src',
@@ -157,12 +155,6 @@ const renderSearchHistory = async (searchHistory: any) => {
     }
   }
 };
-
-/*
-
-Helper Functions
-
-*/
 
 const createForecastCard = () => {
   const col = document.createElement('div');
@@ -243,12 +235,6 @@ const buildHistoryListItem = (city: any) => {
   return historyDiv;
 };
 
-/*
-
-Event Handlers
-
-*/
-
 const handleSearchFormSubmit = (event: any): void => {
   event.preventDefault();
 
@@ -275,12 +261,6 @@ const handleDeleteHistoryClick = (event: any) => {
   const cityID = JSON.parse(event.target.getAttribute('data-city')).id;
   deleteCityFromHistory(cityID).then(getAndRenderHistory);
 };
-
-/*
-
-Initial Render
-
-*/
 
 const getAndRenderHistory = () =>
   fetchSearchHistory().then(renderSearchHistory);
