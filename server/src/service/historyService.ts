@@ -1,4 +1,4 @@
-import { Pool } from 'pg';
+import pkg from 'pg';
 import { v4 as UUID } from 'uuid';
 import fs from 'fs/promises';
 import path from 'path';
@@ -6,6 +6,7 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
+const { Pool } = pkg;
 // ✅ PostgreSQL Connection Setup
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL, // Render-provided database URL
