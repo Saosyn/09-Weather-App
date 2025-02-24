@@ -52,7 +52,7 @@ This project is a weather dashboard application that retrieves weather data from
 
 ## Deployment
 
-The application is deployed to Render. You can access it [here](deployed-url).
+The application is deployed to Render. You can access it [here](https://zero9-weather-app.onrender.com/).
 
 ## Usage
 
