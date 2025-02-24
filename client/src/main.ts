@@ -90,7 +90,7 @@ const renderCurrentWeather = (currentWeather: any): void => {
   weatherIcon.setAttribute('class', 'weather-img');
   heading.append(weatherIcon);
   tempEl.textContent = `Temp: ${tempF}°F`;
-  windEl.textContent = `Wind: ${wind} MPH`;
+  windEl.textContent = `Wind: ${Math.round(wind)} MPH`;
   humidityEl.textContent = `Humidity: ${humidity} %`;
 
   if (todayContainer) {
@@ -118,7 +118,7 @@ const renderForecast = (forecast: any): void => {
 };
 
 const renderForecastCard = (forecast: any) => {
-  const { date, icon, iconDescription, tempF, windSpeed, humidity } = forecast;
+  const { date, icon, iconDescription, tempF, wind, humidity } = forecast;
 
   const { col, cardTitle, weatherIcon, tempEl, windEl, humidityEl } =
     createForecastCard();
@@ -131,7 +131,7 @@ const renderForecastCard = (forecast: any) => {
   );
   weatherIcon.setAttribute('alt', iconDescription);
   tempEl.textContent = `Temp: ${tempF} °F`;
-  windEl.textContent = `Wind: ${windSpeed} MPH`;
+  windEl.textContent = `Wind: ${Math.round(wind)} MPH`;
   humidityEl.textContent = `Humidity: ${humidity} %`;
 
   if (forecastContainer) {
