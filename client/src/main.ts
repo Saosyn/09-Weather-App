@@ -77,7 +77,7 @@ Render Functions
 */
 
 const renderCurrentWeather = (currentWeather: any): void => {
-  const { city, date, icon, iconDescription, tempF, windSpeed, humidity } =
+  const { city, date, icon, iconDescription, tempF, wind, humidity } =
     currentWeather;
 
   // convert the following to typescript
@@ -90,7 +90,7 @@ const renderCurrentWeather = (currentWeather: any): void => {
   weatherIcon.setAttribute('class', 'weather-img');
   heading.append(weatherIcon);
   tempEl.textContent = `Temp: ${tempF}°F`;
-  windEl.textContent = `Wind: ${windSpeed} MPH`;
+  windEl.textContent = `Wind: ${wind} MPH`;
   humidityEl.textContent = `Humidity: ${humidity} %`;
 
   if (todayContainer) {
