@@ -123,24 +123,22 @@ class WeatherService {
   }
 
   // TODO: Build parseCurrentWeather method
+
   private parseCurrentWeather(response: any): Weather {
     const timestamp: number = Number(response.dt) * 1000;
     const parsedDate: string = new Date(timestamp).toLocaleDateString('en-US');
-
-    console.log(parsedDate);
-
+    const windSpeed = response.wind?.speed ?? 0; // Use wind.speed if it exists, else 0
+    console.log('parseCurrentWeather - wind:', response.wind);
     return new Weather(
       this.city,
-      response.main.temp,
-      response.wind_speed,
+      response.main.temp, // already in °F from API (units=imperial)
+      windSpeed,
       response.main.humidity,
       parsedDate,
       response.weather[0].icon,
       response.weather[0].main || response.weather[0].description
     );
   }
-
-  // TODO: Complete buildForecastArray method
 
   private buildForecastArray(
     currentWeather: Weather,
@@ -153,16 +151,17 @@ class WeatherService {
     );
 
     for (const day of filteredWeatherData) {
-      const timestamp: number = Number(day.dt) * 1000; // Convert to milliseconds
+      const timestamp: number = Number(day.dt) * 1000;
       const formattedDate: string = new Date(timestamp).toLocaleDateString(
         'en-US'
       );
-
+      const windSpeed = day.wind?.speed ?? 0;
+      console.log('buildForecastArray - day.wind:', day.wind);
       weatherForecast.push(
         new Weather(
           this.city,
           day.main.temp,
-          day.wind_speed,
+          windSpeed,
           day.main.humidity,
           formattedDate,
           day.weather[0].icon,
@@ -173,6 +172,57 @@ class WeatherService {
 
     return weatherForecast;
   }
+
+  // private parseCurrentWeather(response: any): Weather {
+  //   const timestamp: number = Number(response.dt) * 1000;
+  //   const parsedDate: string = new Date(timestamp).toLocaleDateString('en-US');
+
+  //   console.log(parsedDate);
+
+  //   return new Weather(
+  //     this.city,
+  //     response.main.temp,
+  //     response.wind_speed,
+  //     response.main.humidity,
+  //     parsedDate,
+  //     response.weather[0].icon,
+  //     response.weather[0].main || response.weather[0].description
+  //   );
+  // }
+
+  // // TODO: Complete buildForecastArray method
+
+  // private buildForecastArray(
+  //   currentWeather: Weather,
+  //   weatherData: any[]
+  // ): Weather[] {
+  //   const weatherForecast: Weather[] = [currentWeather];
+
+  //   const filteredWeatherData = weatherData.filter((data: any) =>
+  //     data.dt_txt.includes('12:00:00')
+  //   );
+
+  //   for (const day of filteredWeatherData) {
+  //     const timestamp: number = Number(day.dt) * 1000; // Convert to milliseconds
+  //     const formattedDate: string = new Date(timestamp).toLocaleDateString(
+  //       'en-US'
+  //     );
+
+  //     weatherForecast.push(
+  //       new Weather(
+  //         this.city,
+  //         day.main.temp,
+  //         day.wind_speed,
+  //         day.main.humidity,
+  //         formattedDate,
+  //         day.weather[0].icon,
+  //         day.weather[0].description || day.weather[0].main
+  //       )
+  //     );
+  //   }
+
+  //   return weatherForecast;
+  // }
 
   // TODO: Complete getWeatherForCity method
   async getWeatherForCity(city: string) {
