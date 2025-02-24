@@ -132,7 +132,7 @@ class WeatherService {
     return new Weather(
       this.city,
       response.main.temp,
-      response.main.wind_speed,
+      response.wind_speed,
       response.main.humidity,
       parsedDate,
       response.weather[0].icon,
@@ -162,7 +162,7 @@ class WeatherService {
         new Weather(
           this.city,
           day.main.temp,
-          day.main.wind_speed,
+          day.wind_speed,
           day.main.humidity,
           formattedDate,
           day.weather[0].icon,
