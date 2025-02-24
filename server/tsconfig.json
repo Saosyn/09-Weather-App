@@ -3,9 +3,9 @@
   "compilerOptions": {
     "outDir": "dist",
     "rootDir": "src",
-    "module": "CommonJS", // ✅ If you use import.meta.url, ESNext is required
-    "target": "ES6",
-    "moduleResolution": "node",
+    "module": "NodeNext", // ✅ If you use import.meta.url, ESNext is required
+    "target": "ESNext",
+    "moduleResolution": "NodeNext",
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,

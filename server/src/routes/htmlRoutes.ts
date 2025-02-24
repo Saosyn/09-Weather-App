@@ -1,9 +1,9 @@
 import path from 'path';
+import { fileURLToPath } from 'url';
 import { Router, type Request, type Response } from 'express';
 
-// ✅ Explicitly define `__filename` and `__dirname` types
-const __filename: string = path.join(process.cwd(), 'src/routes/htmlRoutes.ts');
-const __dirname: string = path.dirname(__filename);
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const router = Router();
 
