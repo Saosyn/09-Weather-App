@@ -129,9 +129,12 @@ class WeatherService {
     const parsedDate: string = new Date(timestamp).toLocaleDateString('en-US');
     const windSpeed = response.wind?.speed ?? 0; // Use wind.speed if it exists, else 0
     console.log('parseCurrentWeather - wind:', response.wind);
+
+    const tempF = Math.round(response.main.temp);
+
     return new Weather(
       this.city,
-      response.main.temp, // already in °F from API (units=imperial)
+      tempF, // already in °F from API (units=imperial)
       windSpeed,
       response.main.humidity,
       parsedDate,
@@ -157,10 +160,13 @@ class WeatherService {
       );
       const windSpeed = day.wind?.speed ?? 0;
       console.log('buildForecastArray - day.wind:', day.wind);
+
+      const tempF = Math.round(day.main.temp);
+
       weatherForecast.push(
         new Weather(
           this.city,
-          day.main.temp,
+          tempF,
           windSpeed,
           day.main.humidity,
           formattedDate,
