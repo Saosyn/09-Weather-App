@@ -8,12 +8,15 @@ const __dirname = path.dirname(__filename);
 
 const router = Router();
 
-// ✅ Serve static files (CSS, JS, images) from client/
-router.use(express.static(path.join(__dirname, 'client')));
+// ✅ Serve static files (CSS, JS, images) from `dist/assets/`
+router.use(
+  '/assets',
+  express.static(path.join(process.cwd(), 'client/dist/assets'))
+);
 
 // ✅ Serve index.html for all routes
 router.get('*', (_req: Request, res: Response) => {
-  res.sendFile(path.join(process.cwd(), 'client/index.html'));
+  res.sendFile(path.join(process.cwd(), 'client/dist/index.html'));
 });
 
 export default router;
